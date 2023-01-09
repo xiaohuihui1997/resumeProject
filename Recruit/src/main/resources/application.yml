@@ -1,0 +1,60 @@
+server:
+  port: 8089  #设置请求端口
+  servlet:
+    encoding:
+      charset: UTF-8  #设置 Tomcat 编码格式
+#    context-path: /spring-boot #设置访问一级路径
+
+
+Spring:
+  datasource: #数据库设置
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql:///recruit?characterEncoding=UTF-8&useUnicode=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=GMT%2B8
+    password: root123
+    username: root
+    type: com.alibaba.druid.pool.DruidDataSource
+    initialSize: 5
+    minIdle: 5
+    maxActive: 20
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT1FROMDUAL
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    filters: stat,wall,log4j
+    logSlowSql: true
+  redis: #redis设置
+    host: 127.0.0.1
+    port: 6379
+  cache:
+    type: redis
+    redis:
+      time-to-live: 3600000
+      cache-null-values: true
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher #解决swagger报错问题
+  #设置上传文件大小
+  servlet:
+    multipart:
+      max-request-size: 100MB
+      max-file-size: 100MB
+  devtools:
+    restart:
+      enabled: true #配置项目热部署
+
+
+mybatis-plus: #配置日志 log-impl:日志实现
+  configuration: # 默认的驼峰式编码在mybatis plus 则会默认把驼峰式编码写成 user_code
+    map-underscore-to-camel-case: true #开启驼峰
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #sql语句输出
+  global-config:
+      db-config:
+        id-type: auto #设置拥有@TableId标签的都为自增
+  mapper-locations: classpath:mapper/*.xml #mapper映射设置
+#  type-aliases-package: com.wjz.entity
+
+
+

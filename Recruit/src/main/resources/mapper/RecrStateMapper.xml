@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wjz.mapper.RecrStateMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.wjz.entity.RecrState">
+        <id column="state_id" property="stateId" />
+        <result column="recruit_id" property="recruitId" />
+        <result column="is_ass" property="isAss" />
+        <result column="assignee" property="assignee" />
+        <result column="evaluation" property="evaluation" />
+        <result column="is_publish" property="isPublish" />
+        <result column="publish_channel" property="publishChannel" />
+        <result column="create_user" property="createUser" />
+        <result column="create_time" property="createTime" />
+        <result column="update_user" property="updateUser" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="entity">
+        state_id, recruit_id, is_ass, assignee, evaluation, is_publish, publish_channel, create_user, create_time, update_user, update_time
+    </sql>
+
+    <!-- 通用查询结果列 -->
+    <sql id="recruit">
+        recruit_id, recruit_name, level, work_year, salary_limit, work_address, academic, arrival_time, pr_level, push_rem, project_nature, recruit_desc, demand_statud, is_close, is_delete, create_user, create_time, update_user, update_time
+    </sql>
+
+    <!--  状态添加  -->
+    <insert id="addState">
+        insert into recr_state set recruit_id=#{recruitId};
+    </insert>
+
+    <!-- 分配操作 -->
+    <update id="updateRecrState">
+        update recr_state set is_ass=1,assignee=#{assignee},evaluation=#{evaluation} where recruit_id=#{recruit_id}
+    </update>
+
+    <!--发布操作-->
+    <update id="Publish">
+        update recr_state set publish_channel=#{publish_channel},is_publish=1 where recruit_id=#{recruit_id}
+    </update>
+
+    <!--查询未被分配-->
+    <select id="selectNoAssP" resultType="com.wjz.entity.RecrRecruit">
+        select
+            t1.recruit_id, t1.recruit_name, t1.level, t1.work_year,
+            t1.salary_limit, t1.work_address, t1.academic, t1.arrival_time,
+            t1.pr_level, t1.push_rem, t1.project_nature, t1.recruit_desc,
+            t1.demand_statud, t1.is_close, t1.is_delete, t1.create_user,
+            t1.create_time, t1.update_user, t1.update_time
+        from
+            recr_recruit t1
+        inner join
+            recr_state t2
+        on
+            t1.recruit_id = t2.recruit_id
+            and t2.is_ass = 0
+            and t1.is_delete = 0
+        <if test="ew!=null">
+            ${ew.customSqlSegment}
+        </if>
+    </select>
+
+    <!-- 查询未被发布的 -->
+    <select id="NoPublish" resultType="com.wjz.entity.RecrRecruit">
+        select
+            t1.recruit_id, t1.recruit_name, t1.level, t1.work_year,
+            t1.salary_limit, t1.work_address, t1.academic, t1.arrival_time,
+            t1.pr_level, t1.push_rem, t1.project_nature, t1.recruit_desc,
+            t1.demand_statud, t1.is_close, t1.is_delete, t1.create_user,
+            t1.create_time, t1.update_user, t1.update_time
+        from
+            recr_recruit t1
+        inner join
+            recr_state t2
+        on
+            t1.recruit_id = t2.recruit_id
+            and t2.is_publish = 0
+            and t1.is_delete = 0
+        <if test="wq!=null">
+            ${wq.customSqlSegment}
+        </if>
+    </select>
+
+    <!-- 查询已经发布的-->
+    <select id="isPublish" resultType="com.wjz.entity.RecrRecruit">
+        select
+            t1.recruit_id, t1.recruit_name, t1.level, t1.work_year,
+            t1.salary_limit, t1.work_address, t1.academic, t1.arrival_time,
+            t1.pr_level, t1.push_rem, t1.project_nature, t1.recruit_desc,
+            t1.demand_statud, t1.is_close, t1.is_delete, t1.create_user,
+            t1.create_time, t1.update_user, t1.update_time
+        from
+            recr_recruit t1
+        inner join
+            recr_state t2
+        on
+            t1.recruit_id = t2.recruit_id
+            and t2.is_publish = 1
+            and t1.is_delete = 0
+        <if test="qw!=null">
+            ${qw.customSqlSegment}
+        </if>
+    </select>
+
+</mapper>

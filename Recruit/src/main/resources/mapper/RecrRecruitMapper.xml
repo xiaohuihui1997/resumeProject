@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wjz.mapper.RecrRecruitMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.wjz.entity.RecrRecruit">
+        <id column="recruit_id" property="recruitId" />
+        <result column="recruit_name" property="recruitName" />
+        <result column="level" property="level" />
+        <result column="work_year" property="workYear" />
+        <result column="salary_limit" property="salaryLimit" />
+        <result column="work_address" property="workAddress" />
+        <result column="academic" property="academic" />
+        <result column="arrival_time" property="arrivalTime" />
+        <result column="pr_level" property="prLevel" />
+        <result column="push_rem" property="pushRem" />
+        <result column="project_nature" property="projectNature" />
+        <result column="recruit_desc" property="recruitDesc" />
+        <result column="demand_statud" property="demandStatud" />
+        <result column="is_close" property="isClose" />
+        <result column="is_delete" property="isDelete" />
+        <result column="create_user" property="createUser" />
+        <result column="create_time" property="createTime" />
+        <result column="update_user" property="updateUser" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="entity">
+        recruit_id, recruit_name, level, work_year, salary_limit, work_address, academic, arrival_time, pr_level, push_rem, project_nature, recruit_desc, demand_statud, is_close, is_delete, create_user, create_time, update_user, update_time
+    </sql>
+    <update id="closeRecruit">
+        update recr_recruit set is_close = 1 where recruit_id=#{recruit_id}
+    </update>
+
+</mapper>
