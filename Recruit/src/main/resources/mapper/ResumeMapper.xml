@@ -10,7 +10,7 @@
         update resume set is_delete = '1' where id = #{id}
     </update>
 
-    <update id="PushResume">
+    <update id="pushResume">
         update resume set url=#{resumeUrlName},sup_id=#{sup_id}
         where id=#{id}
     </update>

@@ -87,7 +87,7 @@ public class ResumeServiceImpl extends ServiceImpl<ResumeMapper, Resume> impleme
     }
 
     @Override
-    public int PushResume(int id, int sup_id, String resumeUrlName) {
-        return resumeMapper.PushResume(id,sup_id,resumeUrlName);
+    public int pushResume(int id, int sup_id, String resumeUrlName) {
+        return resumeMapper.pushResume(id,sup_id,resumeUrlName);
     }
 }
