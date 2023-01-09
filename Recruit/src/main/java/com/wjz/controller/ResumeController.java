@@ -9,11 +9,15 @@ import com.wjz.entity.*;
 import com.wjz.service.ResumeService;
 import com.wjz.utils.CommonVariable;
 import com.wjz.utils.JsonObjectUtil;
+import com.wjz.utils.MFileUtils;
 import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -30,7 +34,6 @@ public class ResumeController {
 
     /**
      * 录入简历
-     *
      * @param resume 简历信息
      */
     @RequestMapping(value = "/entering", method = RequestMethod.POST)
@@ -50,8 +53,47 @@ public class ResumeController {
     }
 
     /**
+     * 推送简历
+     * @param resumeUrl 简历文件
+     * @throws IOException
+     */
+    @RequestMapping(value = "/PushResume",method = RequestMethod.POST)
+    public Result<Resume> PushResume(int id, int sup_id, MultipartFile resumeUrl) throws IOException {
+        if (!resumeUrl.isEmpty()) {
+            if((resumeUrl.getOriginalFilename().endsWith(".rar"))||
+                    (resumeUrl.getOriginalFilename().endsWith(".arj"))||
+                    (resumeUrl.getOriginalFilename().endsWith(".jar"))||
+                    (resumeUrl.getOriginalFilename().endsWith(".zip"))||
+                    (resumeUrl.getOriginalFilename().endsWith(".doc"))||
+                    (resumeUrl.getOriginalFilename().endsWith(".jpg"))||
+                    (resumeUrl.getOriginalFilename().endsWith(".png"))||
+                    (resumeUrl.getOriginalFilename().endsWith(".pdf"))||
+                    (resumeUrl.getOriginalFilename().endsWith(".docx"))){
+                //根据文件创建一个文件名字
+                String s1 = MFileUtils.MakeFileName(resumeUrl.getOriginalFilename());
+                //把这个文件写入到FILE_PATH路径下
+                File file = new File(MFileUtils.FILE_PATH + s1);
+                file.mkdirs();
+                resumeUrl.transferTo(file);
+                //记录该路径名称
+                String resumeUrlName = MFileUtils.FILE_PATH9+s1;
+                //推送简历
+                int update = resumeService.PushResume(id,sup_id,resumeUrlName);
+                if(update>1){
+                    return Result.sucess("上传成功!");
+                }else{
+                    return Result.sucess("上传失败!");
+                }
+            }else{
+                return Result.error("文件格式不对!应该是rar,arj,zip,doc,jpg,png,pdf,docx其中一种");
+            }
+        }else{
+            return Result.error("文件为空!");
+        }
+    }
+
+    /**
      * 查看单个简历
-     *
      * @param id
      * @return
      */
@@ -66,7 +108,6 @@ public class ResumeController {
 
     /**
      * 删除单个简历
-     *
      * @param id
      * @return
      */
