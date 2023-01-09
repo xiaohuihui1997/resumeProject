@@ -21,4 +21,6 @@ public interface ResumeMapper extends BaseMapper<Resume> {
     Resume queryResumeByIdCard(@Param("identityCardNumber") String identityCardNumber);
 
     int updateIsDeleteById(@Param("id") Integer id);
+
+    int PushResume(int id, int sup_id, @Param("resumeUrlName")String resumeUrlName);
 }
