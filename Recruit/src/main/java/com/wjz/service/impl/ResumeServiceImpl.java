@@ -85,4 +85,9 @@ public class ResumeServiceImpl extends ServiceImpl<ResumeMapper, Resume> impleme
         page(page, qw);
         return Result.sucess(page.getRecords(), "查询列表成功！", page.getTotal());
     }
+
+    @Override
+    public int PushResume(int id, int sup_id, String resumeUrlName) {
+        return resumeMapper.PushResume(id,sup_id,resumeUrlName);
+    }
 }
