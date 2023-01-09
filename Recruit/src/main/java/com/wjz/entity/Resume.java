@@ -99,5 +99,6 @@ public class Resume extends BaseEntity {
     //简历是否已推送
     private Integer isPush;
 
-    //简历状态，
+    //简历状态
+    private String status;
 }
