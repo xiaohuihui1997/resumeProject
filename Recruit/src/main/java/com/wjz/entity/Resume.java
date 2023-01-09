@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.annotation.*;
 import java.util.Date;
 import java.io.Serializable;
 
-import com.sun.istack.internal.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -84,6 +83,11 @@ public class Resume extends BaseEntity {
      * 初筛是否通过(1为通过，0为未通过)
      */
     private String isPass;
+
+    /**
+     * 主管id
+     */
+    private Integer supId;
 
     /**
      * 简历存放路径
