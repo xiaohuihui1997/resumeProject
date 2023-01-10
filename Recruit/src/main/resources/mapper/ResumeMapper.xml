@@ -11,7 +11,7 @@
     </update>
 
     <update id="pushResume">
-        update resume set url=#{resumeUrlName},sup_id=#{sup_id}
+        update resume set url=#{resumeUrlName},sup_id=#{sup_id},is_push=1,
         where id=#{id}
     </update>
 

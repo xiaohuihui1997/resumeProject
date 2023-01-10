@@ -93,6 +93,48 @@ public class ResumeController {
     }
 
     /**
+     * 未推送的简历
+     * 分页查询
+     * @param pageUtil 分页工具
+     * @return
+     */
+    @RequestMapping(value = "/pageResumeOne",method = RequestMethod.GET)
+    public Result<List> pageResumeOne(PageUtil pageUtil){
+        IPage<Resume> page = new Page(pageUtil.getPageNum(),pageUtil.getPageSize());
+        //条件控制器
+        QueryWrapper<Resume> qw = new QueryWrapper<>();
+        //判断搜索的关键字是否存在
+        if(pageUtil.getKeyWord()!=null && !pageUtil.getKeyWord().equals("")){
+            qw.like("position_name",pageUtil.getKeyWord());
+        }
+        qw.eq("is_push",0);
+        resumeService.page(page,qw);
+        List<Resume> candResumeList = page.getRecords();
+        return Result.sucess(candResumeList,"查询成功!",page.getTotal());
+    }
+
+    /**
+     * 已经推送的简历
+     * 分页查询
+     * @param pageUtil 分页工具
+     * @return
+     */
+    @RequestMapping(value = "/pageResumeTwo",method = RequestMethod.GET)
+    public Result<List> pageResumeTwo(PageUtil pageUtil){
+        IPage<Resume> page = new Page(pageUtil.getPageNum(),pageUtil.getPageSize());
+        //条件控制器
+        QueryWrapper<Resume> qw = new QueryWrapper<>();
+        //判断搜索的关键字是否存在
+        if(pageUtil.getKeyWord()!=null && !pageUtil.getKeyWord().equals("")){
+            qw.like("position_name",pageUtil.getKeyWord());
+        }
+        qw.eq("is_push",1);
+        resumeService.page(page,qw);
+        List<Resume> candResumeList = page.getRecords();
+        return Result.sucess(candResumeList,"查询成功!",page.getTotal());
+    }
+
+    /**
      * 查看单个简历
      * @param id
      * @return

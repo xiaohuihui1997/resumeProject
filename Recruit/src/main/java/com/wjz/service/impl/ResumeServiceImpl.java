@@ -90,4 +90,5 @@ public class ResumeServiceImpl extends ServiceImpl<ResumeMapper, Resume> impleme
     public int pushResume(int id, int sup_id, String resumeUrlName) {
         return resumeMapper.pushResume(id,sup_id,resumeUrlName);
     }
+
 }

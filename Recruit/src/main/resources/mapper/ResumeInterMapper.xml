@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wjz.mapper.ResumeInterMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.wjz.entity.ResumeInter">
+        <id column="inter_id" property="interId" />
+        <result column="resume_id" property="resumeId" />
+        <result column="inter_time" property="interTime" />
+        <result column="inter_post" property="interPost" />
+        <result column="inter_person" property="interPerson" />
+        <result column="inter_type" property="interType" />
+        <result column="inter_form" property="interForm" />
+        <result column="arrang_id" property="arrangId" />
+        <result column="is_sign" property="isSign" />
+        <result column="inter_url" property="interUrl" />
+        <result column="is_pass" property="isPass" />
+        <result column="inter_appraise" property="interAppraise" />
+        <result column="is_appraise" property="isAppraise" />
+        <result column="assign_id" property="assignId" />
+        <result column="assign_appraise" property="assignAppraise" />
+        <result column="is_absence" property="isAbsence" />
+        <result column="absence_appraise" property="absenceAppraise" />
+        <result column="is_accept" property="isAccept" />
+        <result column="create_user" property="createUser" />
+        <result column="create_time" property="createTime" />
+        <result column="update_user" property="updateUser" />
+        <result column="update_time" property="updateTime" />
+        <result column="is_delete" property="isDelete" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        inter_id, resume_id, inter_time, inter_post, inter_person, inter_type, inter_form, arrang_id, is_sign, inter_url, is_pass, inter_appraise, is_appraise, assign_id, assign_appraise, is_absence, absence_appraise, is_accept, create_user, create_time, update_user, update_time, is_delete
+    </sql>
+    <update id="appraise">
+        update resume_inter set is_pass=#{is_pass},inter_appraise=#{inter_appraise},is_appraise=1
+        where resume_id=#{resume_id}
+    </update>
+    <update id="transmitte">
+        update resume_inter set assign_id=#{assign_id},assign_appraise=#{assign_appraise}
+        where resume_id=#{resume_id}
+    </update>
+    <update id="NotPresent">
+        update resume_inter set absence_appraise=#{absence_appraise},
+                                is_absence=1
+        where resume_id=#{resume_id}
+    </update>
+
+</mapper>
