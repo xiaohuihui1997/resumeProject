@@ -5,17 +5,19 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.wjz.entity.*;
-import com.wjz.mapper.RecrRecruitMapper;
+import com.wjz.entity.Result;
+import com.wjz.entity.Resume;
+import com.wjz.entity.ResumePageInfo;
+import com.wjz.entity.ResumeProcess;
 import com.wjz.mapper.ResumeMapper;
-import com.wjz.service.RecrRecruitService;
+import com.wjz.mapper.ResumeProcessMapper;
 import com.wjz.service.ResumeService;
 import com.wjz.utils.CommonVariable;
 import com.wjz.utils.JsonObjectUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -32,10 +34,18 @@ public class ResumeServiceImpl extends ServiceImpl<ResumeMapper, Resume> impleme
     @Autowired
     private ResumeMapper resumeMapper;
 
+    @Autowired
+    private ResumeProcessMapper resumeProcessMapper;
 
+    @Transactional
     @Override
     public void enteringResume(Resume resume) {
         resumeMapper.insert(resume);
+//        resumeMapper.insertReturnId(resume);
+//        ResumeProcess resumeProcess = new ResumeProcess();
+//        resumeProcess.setResumeId(resume.getId());
+//        resumeProcess.setStatus(CommonVariable.PRIMARY_SCREENING);
+//        resumeProcessMapper.insert(resumeProcess);
     }
 
     @Override
@@ -86,9 +96,14 @@ public class ResumeServiceImpl extends ServiceImpl<ResumeMapper, Resume> impleme
         return Result.sucess(page.getRecords(), "查询列表成功！", page.getTotal());
     }
 
+    @Transactional
     @Override
     public int pushResume(int id, int sup_id, String resumeUrlName) {
-        return resumeMapper.pushResume(id,sup_id,resumeUrlName);
+        resumeMapper.pushResume(id,sup_id,resumeUrlName, CommonVariable.IS_PUSH);
+        ResumeProcess resumeProcess = new ResumeProcess();
+        resumeProcess.setResumeId(id);
+        resumeProcess.setStatus(CommonVariable.PRIMARY_SCREENING);
+        return resumeProcessMapper.insert(resumeProcess);
     }
 
 }

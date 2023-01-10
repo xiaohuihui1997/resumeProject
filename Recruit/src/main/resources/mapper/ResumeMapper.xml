@@ -11,8 +11,17 @@
     </update>
 
     <update id="pushResume">
+        update resume set url=#{resumeUrlName},sup_id=#{sup_id},is_push=#{isPush}
         update resume set url=#{resumeUrlName},sup_id=#{sup_id},is_push=1,
         where id=#{id}
     </update>
+
+    <insert id="insertReturnId">
+        insert into resume(suggest_date,project,work_year,candidate_name,position_name,phone,education,salary_expectation,resume_contact_person,url,is_delete,create_user,create_time,update_user,update_time,identity_card_number,is_push)
+        values(#{suggestDate}, #{project},#{workYear},#{candidateName},#{positionName},#{phone}, #{education}, #{salaryExpectation}, #{resumeContactPerson}, #{url}, #{isDelete},#{createUser},#{createTime},#{updateUser},#{updateTime},#{identityCardNumber},#{isPush})
+        <selectKey keyProperty="id" order="AFTER" resultType="int">
+            select LAST_INSERT_ID()
+        </selectKey>
+    </insert>
 
 </mapper>
