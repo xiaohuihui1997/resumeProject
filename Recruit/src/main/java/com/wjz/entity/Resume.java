@@ -90,6 +90,11 @@ public class Resume extends BaseEntity {
     private String url;
 
     /**
+     * 邮箱
+     */
+    private String email;
+
+    /**
      * 是否删除
      */
     @TableLogic(value = "0",delval = "1")//设置存在为0，不存在为1

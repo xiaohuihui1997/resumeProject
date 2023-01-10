@@ -9,7 +9,7 @@ server:
 Spring:
   datasource: #数据库设置
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql:///recruit?characterEncoding=UTF-8&useUnicode=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=GMT%2B8
+    url: jdbc:mysql://192.168.2.88:3306/recruit?characterEncoding=UTF-8&useUnicode=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=GMT%2B8
     password: root123
     username: root
     type: com.alibaba.druid.pool.DruidDataSource
@@ -45,6 +45,20 @@ Spring:
     restart:
       enabled: true #配置项目热部署
 
+  # 发送邮件配置
+  mail:
+    host: smtp.qq.com # 配置 smtp 服务器地址
+    port: 587 # smtp 服务器的端口
+#    protocol: smtp
+    username: 2875778074@qq.com # 配置邮箱用户名(你的邮箱地址)
+    password: wbwjshsvpdekdgjb # 配置申请到的授权码(刚让复制的授权码)
+    default-encoding: UTF-8 # 配置邮件编码
+    properties:
+      mail:
+        smtp:
+          socketFactoryClass: javax.net.ssl.SSLSocketFactory # 配饰 SSL 加密工厂
+        debug: true
+    from: 2875778074@qq.com # 发送方邮件，配在yml中可方便更改
 
 mybatis-plus: #配置日志 log-impl:日志实现
   configuration: # 默认的驼峰式编码在mybatis plus 则会默认把驼峰式编码写成 user_code
