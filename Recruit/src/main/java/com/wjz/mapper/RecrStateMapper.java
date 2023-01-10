@@ -33,13 +33,13 @@ public interface RecrStateMapper extends BaseMapper<RecrState> {
     //查询未被分配的
     IPage<RecrRecruit> selectNoAssP(IPage<RecrRecruit> page, @Param("ew") QueryWrapper<RecrRecruit> wrapper);
     //分页查询未被发布的
-    IPage<RecrRecruit> NoPublish(IPage<RecrRecruit> page, @Param("wq")QueryWrapper<RecrRecruit> wrapper);
+    IPage<RecrRecruit> noPublish(IPage<RecrRecruit> page, @Param("wq")QueryWrapper<RecrRecruit> wrapper);
 
     //查询发布的
     IPage<RecrRecruit> isPublish(IPage<RecrRecruit> page, @Param("qw")QueryWrapper<RecrRecruit> wrapper);
 
     //发布操作
-    int Publish(int recruit_id, String publish_channel);
+    int publish(int recruit_id, String publish_channel);
 
 
 

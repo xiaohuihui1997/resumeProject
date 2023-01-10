@@ -30,5 +30,5 @@ public interface ResumeService extends IService<Resume> {
 
     Result<List<Resume>> pageByPositionName(ResumePageInfo resumePageInfo);
 
-    int PushResume(int id, int sup_id, String resumeUrlName);
+    int pushResume(int id, int sup_id, String resumeUrlName);
 }

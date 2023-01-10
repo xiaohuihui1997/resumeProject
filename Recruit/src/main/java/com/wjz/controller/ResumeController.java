@@ -57,8 +57,8 @@ public class ResumeController {
      * @param resumeUrl 简历文件
      * @throws IOException
      */
-    @RequestMapping(value = "/PushResume",method = RequestMethod.POST)
-    public Result<Resume> PushResume(int id, int sup_id, MultipartFile resumeUrl) throws IOException {
+    @RequestMapping(value = "/pushResume",method = RequestMethod.POST)
+    public Result<Resume> pushResume(int id, int sup_id, MultipartFile resumeUrl) throws IOException {
         if (!resumeUrl.isEmpty()) {
             if((resumeUrl.getOriginalFilename().endsWith(".rar"))||
                     (resumeUrl.getOriginalFilename().endsWith(".arj"))||
@@ -78,8 +78,8 @@ public class ResumeController {
                 //记录该路径名称
                 String resumeUrlName = MFileUtils.FILE_PATH9+s1;
                 //推送简历
-                int update = resumeService.PushResume(id,sup_id,resumeUrlName);
-                if(update>=1){
+                int update = resumeService.pushResume(id,sup_id,resumeUrlName);
+                if(update>0){
                     return Result.sucess("上传成功!");
                 }else{
                     return Result.sucess("上传失败!");
