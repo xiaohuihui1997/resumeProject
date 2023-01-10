@@ -147,11 +147,11 @@ public class ResumeController {
     }
 
     /**
-     * 面试
+     * 用人部门设置面试时间
      * @param resumeProcess
      * @return
      */
-    @RequestMapping(value = "/interview", method = RequestMethod.POST)
+    @RequestMapping(value = "/interviewTime", method = RequestMethod.POST)
     private JSONObject interview(@RequestBody ResumeProcess resumeProcess) {
         return resumeService.interview(resumeProcess);
     }
