@@ -38,7 +38,7 @@
     </update>
 
     <!--发布操作-->
-    <update id="Publish">
+    <update id="publish">
         update recr_state set publish_channel=#{publish_channel},is_publish=1 where recruit_id=#{recruit_id}
     </update>
 
@@ -64,7 +64,7 @@
     </select>
 
     <!-- 查询未被发布的 -->
-    <select id="NoPublish" resultType="com.wjz.entity.RecrRecruit">
+    <select id="noPublish" resultType="com.wjz.entity.RecrRecruit">
         select
             t1.recruit_id, t1.recruit_name, t1.level, t1.work_year,
             t1.salary_limit, t1.work_address, t1.academic, t1.arrival_time,

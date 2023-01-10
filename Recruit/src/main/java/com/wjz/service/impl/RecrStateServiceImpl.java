@@ -39,7 +39,7 @@ public class RecrStateServiceImpl extends ServiceImpl<RecrStateMapper, RecrState
 
     //分配操作
     @Override
-    public int Assign(int recruit_id, String assignee, String evaluation) {
+    public int assign(int recruit_id, String assignee, String evaluation) {
         return recrStateMapper.updateRecrState(recruit_id,assignee,evaluation);
     }
 
@@ -60,8 +60,8 @@ public class RecrStateServiceImpl extends ServiceImpl<RecrStateMapper, RecrState
      * 未被发布
      */
     @Override
-    public IPage<RecrRecruit> NoPublish(IPage<RecrRecruit> page, QueryWrapper<RecrRecruit> wrapper) {
-        return recrStateMapper.NoPublish(page,wrapper);
+    public IPage<RecrRecruit> noPublish(IPage<RecrRecruit> page, QueryWrapper<RecrRecruit> wrapper) {
+        return recrStateMapper.noPublish(page,wrapper);
     }
 
     //被发布的
@@ -70,8 +70,8 @@ public class RecrStateServiceImpl extends ServiceImpl<RecrStateMapper, RecrState
     }
 
     //发布操作
-    public int Publish(int recruit_id, String publish_channel) {
-        return recrStateMapper.Publish(recruit_id,publish_channel);
+    public int publish(int recruit_id, String publish_channel) {
+        return recrStateMapper.publish(recruit_id,publish_channel);
     }
 
 

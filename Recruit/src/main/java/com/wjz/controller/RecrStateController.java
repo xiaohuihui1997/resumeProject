@@ -63,9 +63,9 @@ public class RecrStateController {
      * @param assignee 分配人
      * @param evaluation 评价
      */
-    @RequestMapping(value = "/Assign",method = RequestMethod.POST)
-    public Result<RecrState> Assign(int recruit_id,String assignee,String evaluation){
-        int i = recrStateService.Assign(recruit_id,assignee,evaluation);
+    @RequestMapping(value = "/assign",method = RequestMethod.POST)
+    public Result<RecrState> assign(int recruit_id,String assignee,String evaluation){
+        int i = recrStateService.assign(recruit_id,assignee,evaluation);
         //查单个
         RecrState recrState = recrStateService.selectOne(recruit_id);
         if(i>0){
@@ -88,7 +88,7 @@ public class RecrStateController {
         }
         IPage page = new Page(pageUtil.getPageNum(), pageUtil.getPageSize()); //设置页索引入
         //调用recrStateService完成多表联查
-        IPage<RecrRecruit> iPage = recrStateService.NoPublish(page,wrapper);
+        IPage<RecrRecruit> iPage = recrStateService.noPublish(page,wrapper);
         List<RecrRecruit> recrRecruitList = page.getRecords();
         return Result.sucess(recrRecruitList,"查询成功!",page.getTotal());
     }
@@ -117,10 +117,10 @@ public class RecrStateController {
      * @param recruit_id 需求职位id，也就是状态id
      * @param publish_channel 发布的渠道的code值
      */
-    @RequestMapping(value = "/Publish",method = RequestMethod.POST)
+    @RequestMapping(value = "/publish",method = RequestMethod.POST)
     public Result<RecrState> Publish(int recruit_id, String publish_channel){
         //发布
-        int i = recrStateService.Publish(recruit_id,publish_channel);
+        int i = recrStateService.publish(recruit_id,publish_channel);
         //查询对应id对应的数据供显示
         RecrState recrState = recrStateService.selectOne(recruit_id);
         //判断
