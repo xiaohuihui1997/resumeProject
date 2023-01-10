@@ -80,11 +80,6 @@ public class Resume extends BaseEntity {
     private String resumeContactPerson;
 
     /**
-     * 初筛是否通过(1为通过，0为未通过)
-     */
-    private String isPass;
-
-    /**
      * 主管id
      */
     private Integer supId;
@@ -103,6 +98,4 @@ public class Resume extends BaseEntity {
     //简历是否已推送
     private Integer isPush;
 
-    //简历状态
-    private String status;
 }
