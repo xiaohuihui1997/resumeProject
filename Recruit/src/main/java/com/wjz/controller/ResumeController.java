@@ -79,7 +79,7 @@ public class ResumeController {
                 String resumeUrlName = MFileUtils.FILE_PATH9+s1;
                 //推送简历
                 int update = resumeService.pushResume(id,sup_id,resumeUrlName);
-                if(update>1){
+                if(update>0){
                     return Result.sucess("上传成功!");
                 }else{
                     return Result.sucess("上传失败!");
