@@ -182,6 +182,9 @@ public class ResumeController {
      */
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     private Result<List<Resume>> listForNoPush(@RequestBody ResumePageInfo resumePageInfo) {
+        if (resumePageInfo.getIsPush() == null){
+            return Result.paramCheckError("推送字段不能为空!");
+        }
         return resumeService.pageByPositionName(resumePageInfo);
     }
 }

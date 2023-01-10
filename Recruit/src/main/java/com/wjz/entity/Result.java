@@ -64,4 +64,11 @@ public class Result<T>  {
         return result;
     }
 
+    public static Result paramCheckError(String msg){
+        Result result = new Result();
+        result.setCode(400);
+        result.setMsg(msg);
+        return result;
+    }
+
 }

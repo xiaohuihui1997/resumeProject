@@ -22,7 +22,7 @@ public interface ResumeMapper extends BaseMapper<Resume> {
 
     int updateIsDeleteById(@Param("id") Integer id);
 
-    int pushResume(int id, int sup_id, @Param("resumeUrlName")String resumeUrlName, @Param("isPush") Integer isPush);
+    int pushResume(int id, int sup_id, @Param("resumeUrlName")String resumeUrlName, @Param("isPush") Integer isPush, @Param("status") Integer status);
 
     void insertReturnId(Resume resume);
     int pushResume(int id, int sup_id, @Param("resumeUrlName")String resumeUrlName);
