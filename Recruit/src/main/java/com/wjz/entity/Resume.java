@@ -98,4 +98,14 @@ public class Resume extends BaseEntity {
     //简历是否已推送
     private Integer isPush;
 
+    //初筛是否通过(待定0，通过1，未通过2)
+    @TableField(exist = false)
+    private Integer firstScreenIsPass;
+
+    //简历状态(简历状态，0为待定，10为初筛中,11为初筛通过，12为初筛未通过，20为初试中，21为初试通过，22为初试未通过，30为复试中，31为复试通过，32为复试未通过)
+    private Integer status;
+
+    //简历具体状态
+    @TableField(exist = false)
+    private String detailStatus;
 }

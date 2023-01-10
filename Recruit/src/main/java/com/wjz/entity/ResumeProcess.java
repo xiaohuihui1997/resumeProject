@@ -25,7 +25,7 @@ public class ResumeProcess extends BaseEntity {
     //resume表的主键id
     private Integer resumeId;
 
-    //简历状态,初筛0,初试1,复试2,发送offer3,正式录用4;
+    //简历状态,待初筛1,初试中2,复试中3,发送offer中4,正式录用中5;
     private Integer status;
 
     //综合评价
