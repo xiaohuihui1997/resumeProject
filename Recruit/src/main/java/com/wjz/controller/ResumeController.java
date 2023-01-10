@@ -145,5 +145,16 @@ public class ResumeController {
         }
         return resumeService.pageByPositionName(resumePageInfo);
     }
+
+    /**
+     * 面试
+     * @param resumeProcess
+     * @return
+     */
+    @RequestMapping(value = "/interview", method = RequestMethod.POST)
+    private JSONObject interview(@RequestBody ResumeProcess resumeProcess) {
+        return resumeService.interview(resumeProcess);
+    }
+
 }
 

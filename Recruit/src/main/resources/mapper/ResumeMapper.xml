@@ -23,4 +23,7 @@
         </selectKey>
     </insert>
 
+    <select id="selectStatusById" resultType="java.lang.Integer">
+        select status from resume where id = #{id}
+    </select>
 </mapper>

@@ -93,6 +93,9 @@ public class ResumeServiceImpl extends ServiceImpl<ResumeMapper, Resume> impleme
             }
         }
         updateById(resume);
+        if (resume.getResumeProcess() != null){
+            resumeProcessMapper.updateById(resume.getResumeProcess());
+        }
         return JsonObjectUtil.returnData(200, "修改成功！");
     }
 
@@ -159,5 +162,34 @@ public class ResumeServiceImpl extends ServiceImpl<ResumeMapper, Resume> impleme
         resumeProcess.setResumeId(id);
         resumeProcess.setStatus(CommonVariable.ResumeProcessVariable.PRIMARY_SCREENING);
         return resumeProcessMapper.insert(resumeProcess);
+    }
+
+    @Transactional
+    @Override
+    public JSONObject interview(ResumeProcess resumeProcess) {
+        //先查看该简历流程到哪里了
+        Integer status = resumeMapper.selectStatusById(resumeProcess.getResumeId());
+        if (status == CommonVariable.ResumeVariable.PRIMARY_SCREENING_PASS){
+            //如果是初筛通过，则约初面
+            //修改简历状态，以及简历流程
+            Resume resume = new Resume();
+            resume.setId(resumeProcess.getResumeId());
+            resume.setStatus(CommonVariable.ResumeVariable.PRELIMINARY_TEST);
+            resumeMapper.updateById(resume);
+            resumeProcess.setStatus(CommonVariable.ResumeProcessVariable.PRELIMINARY_TEST);
+            resumeProcessMapper.insert(resumeProcess);
+        } else if (status == CommonVariable.ResumeVariable.PRELIMINARY_TEST_PASS){
+            //如果是初试通过，则约复试
+            //修改简历状态，以及简历流程
+            Resume resume = new Resume();
+            resume.setId(resumeProcess.getResumeId());
+            resume.setStatus(CommonVariable.ResumeVariable.SECONDARY_EXAMINATION);
+            resumeMapper.updateById(resume);
+            resumeProcess.setStatus(CommonVariable.ResumeProcessVariable.SECONDARY_EXAMINATION);
+            resumeProcessMapper.insert(resumeProcess);
+        } else {
+            return JsonObjectUtil.returnData(500, "该候选人还不能面试！");
+        }
+        return JsonObjectUtil.returnData(200, "成功！");
     }
 }

@@ -5,7 +5,7 @@ public interface CommonVariable {
         //初筛中
         Integer PRIMARY_SCREENING = 10;
 
-        //初筛未通过
+        //初筛通过
         Integer PRIMARY_SCREENING_PASS = 11;
 
         //初筛未通过

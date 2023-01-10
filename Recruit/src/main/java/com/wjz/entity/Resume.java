@@ -1,12 +1,8 @@
 package com.wjz.entity;
 
-import com.baomidou.mybatisplus.annotation.*;
-
-import java.util.Date;
-import java.io.Serializable;
-
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 /**
@@ -108,4 +104,7 @@ public class Resume extends BaseEntity {
     //简历具体状态
     @TableField(exist = false)
     private String detailStatus;
+
+    @TableField(exist = false)
+    private ResumeProcess resumeProcess;
 }
