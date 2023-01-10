@@ -98,8 +98,8 @@ public class ResumeServiceImpl extends ServiceImpl<ResumeMapper, Resume> impleme
 
     @Transactional
     @Override
-    public int PushResume(int id, int sup_id, String resumeUrlName) {
-        resumeMapper.PushResume(id,sup_id,resumeUrlName, CommonVariable.IS_PUSH);
+    public int pushResume(int id, int sup_id, String resumeUrlName) {
+        resumeMapper.pushResume(id,sup_id,resumeUrlName, CommonVariable.IS_PUSH);
         ResumeProcess resumeProcess = new ResumeProcess();
         resumeProcess.setResumeId(id);
         resumeProcess.setStatus(CommonVariable.PRIMARY_SCREENING);
