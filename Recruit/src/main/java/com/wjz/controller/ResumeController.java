@@ -189,12 +189,15 @@ public class ResumeController {
     }
 
     /**
-     * 用人部门设置面试时间
+     * 用人部门设置面试时间和面试官
      * @param resumeProcess
      * @return
      */
     @RequestMapping(value = "/interviewTime", method = RequestMethod.POST)
     private JSONObject interviewTime(@RequestBody ResumeProcess resumeProcess) {
+        if (resumeProcess.getInterviewer() == null || "".equals(resumeProcess.getInterviewer())){
+            return JsonObjectUtil.returnData(400, "面试官不能为空!");
+        }
         return resumeService.interviewTime(resumeProcess);
     }
 
@@ -205,6 +208,14 @@ public class ResumeController {
      */
     @RequestMapping(value = "/interviewResult", method = RequestMethod.POST)
     private JSONObject interviewResult(@RequestBody ResumeProcess resumeProcess) {
+        if (resumeProcess.getId() == null || resumeProcess.getResumeId() == null || resumeProcess.getInterviewResult() == null){
+            return JsonObjectUtil.returnData(400, "参数不能为空!");
+        }
+        if (resumeProcess.getInterviewTime() != null && !"".equals(resumeProcess.getInterviewTime())){
+            if (resumeProcess.getInterviewer() == null || "".equals(resumeProcess.getInterviewer())){
+                return JsonObjectUtil.returnData(400, "面试官不能为空!");
+            }
+        }
         return resumeService.interviewResult(resumeProcess);
     }
 }
