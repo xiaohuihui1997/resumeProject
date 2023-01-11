@@ -49,7 +49,7 @@ public class EmailUtil {
         message.setRecipient(MimeMessage.RecipientType.TO, new InternetAddress(receiveMail, receiveMail,"UTF-8"));
 
         // 4,抄送人
-        message.addRecipient(MimeMessage.RecipientType.CC, new InternetAddress(sendMail));
+//        message.addRecipient(MimeMessage.RecipientType.CC, new InternetAddress(sendMail));
 
         //邮件主题
         message.setSubject(mailTitle, "UTF-8");
