@@ -92,8 +92,7 @@ public class ResumeController {
     }
 
     /**
-     * 未推送的简历
-     * 分页查询
+     * 简历下载
      * @param url 文件路径
      * @return
      */
@@ -187,15 +186,12 @@ public class ResumeController {
 
     /**
      * 简历列表展示
-     * @param resumePageInfo
+     * @param resume
      * @return
      */
     @RequestMapping(value = "/list", method = RequestMethod.POST)
-    private Result<List<Resume>> listForNoPush(@RequestBody ResumePageInfo resumePageInfo) {
-        if (resumePageInfo.getIsPush() == null){
-            return Result.paramCheckError("推送字段不能为空!");
-        }
-        return resumeService.pageByPositionName(resumePageInfo);
+    private Result<List<Resume>> list(@RequestBody Resume resume, Integer pageNum, Integer pageSize, Boolean isPass) {
+        return resumeService.pageByPositionName(pageNum, pageSize, resume, isPass);
     }
 
     /**

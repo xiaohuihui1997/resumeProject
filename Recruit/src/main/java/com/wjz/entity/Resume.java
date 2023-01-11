@@ -19,9 +19,12 @@ public class Resume extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
     public static final String POSITION_NAME = "position_name";
+
     public static final String IS_DELETE = "is_delete";
+
     public static final String IS_PUSH = "is_push";
 
+    public static final String STATUS = "status";
     /**
      * 主键id
      */

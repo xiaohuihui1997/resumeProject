@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wjz.entity.Result;
 import com.wjz.entity.Resume;
-import com.wjz.entity.ResumePageInfo;
 import com.wjz.entity.ResumeProcess;
 import com.wjz.mapper.ResumeMapper;
 import com.wjz.mapper.ResumeProcessMapper;
@@ -21,9 +20,14 @@ import org.springframework.util.CollectionUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -99,18 +103,30 @@ public class ResumeServiceImpl extends ServiceImpl<ResumeMapper, Resume> impleme
     }
 
     @Override
-    public Result<List<Resume>> pageByPositionName(ResumePageInfo resumePageInfo) {
-        IPage<Resume> page = new Page(resumePageInfo.getPageNum(), resumePageInfo.getPageSize());
+    public Result<List<Resume>> pageByPositionName(Integer pageNum, Integer pageSize, Resume resume, Boolean isPass) {
+        IPage<Resume> page = new Page(pageNum, pageSize);
         QueryWrapper<Resume> qw = new QueryWrapper<>();
-        if (resumePageInfo.getKeyWord() != null && !"".equals(resumePageInfo.getKeyWord())) {
-            //模糊查询
-            qw.like(Resume.POSITION_NAME, resumePageInfo.getKeyWord());
+        //根据岗位筛选
+        if (resume.getPositionName() != null && !"".equals(resume.getPositionName())) {
+            qw.like(Resume.POSITION_NAME, resume.getPositionName());
         }
         //筛选存在的
-        qw.eq(Resume.IS_DELETE, CommonVariable.IS_NOT_DELETE).eq(Resume.IS_PUSH, resumePageInfo.getIsPush());
+        qw.eq(Resume.IS_DELETE, CommonVariable.IS_NOT_DELETE);
+        //简历是否推送
+        if (resume.getIsPush() != null) {
+            qw.eq(Resume.IS_PUSH, resume.getIsPush());
+        }
+        //简历是否通过
+        if (isPass != null){
+            if (!isPass){
+                //不通过的简历状态分别为12，22，32
+                List<Integer> statusList = Arrays.asList(CommonVariable.ResumeVariable.PRIMARY_SCREENING_NOT_PASS, CommonVariable.ResumeVariable.PRELIMINARY_TEST_NOT_PASS, CommonVariable.ResumeVariable.SECONDARY_TEST_NOT_PASS);
+                qw.in(Resume.STATUS, statusList);
+            }
+        }
         page(page, qw);
         List<Resume> resumeList = page.getRecords();
-        if (resumePageInfo.getIsPush() == CommonVariable.IS_PUSH && !CollectionUtils.isEmpty(resumeList)){
+        if (!CollectionUtils.isEmpty(resumeList)){
 //            //如果简历已推送，需要查询简历状态
 //            List<Integer> resumeIdList = resumeList.stream().map(Resume::getId).collect(Collectors.toList());
 //            List<ResumeProcess> resumeProcessList = resumeProcessMapper.selectByResumeIds(resumeIdList, CommonVariable.IS_NOT_DELETE);
@@ -122,32 +138,39 @@ public class ResumeServiceImpl extends ServiceImpl<ResumeMapper, Resume> impleme
 //                return key1;
 //            }));
             //设置简历状态
-            for (Resume resume : resumeList){
+            for (Resume obj : resumeList){
 //                ResumeProcess resumeProcess = resumeIdResumeProcessMap.get(resume.getId());
 //                //简历状态
 //                Integer status = resumeProcess.getStatus();
 //                //简历面试结果
 //                Integer interviewResult = resumeProcess.getInterviewResult();
-                Integer status = resume.getStatus();
-                if (status == CommonVariable.ResumeVariable.PRIMARY_SCREENING){
-                    resume.setDetailStatus(CommonVariable.PRELIMINARY_SCREENING_TO_BE_CONFIRMED);
+                Integer status = obj.getStatus();
+                if (status == CommonVariable.ResumeVariable.TO_BE_SCREENED){
+                    obj.setDetailStatus(CommonVariable.TO_BE_SCREENED);
+                } else if (status == CommonVariable.ResumeVariable.PRIMARY_SCREENING){
+                    obj.setDetailStatus(CommonVariable.PRELIMINARY_SCREENING_TO_BE_CONFIRMED);
                 } else if (status == CommonVariable.ResumeVariable.PRIMARY_SCREENING_PASS){
-                    resume.setDetailStatus(CommonVariable.PRIMARY_SCREENING_PASS);
+                    obj.setDetailStatus(CommonVariable.PRIMARY_SCREENING_PASS);
                 } else if (status == CommonVariable.ResumeVariable.PRIMARY_SCREENING_NOT_PASS){
-                    resume.setDetailStatus(CommonVariable.PRIMARY_SCREENING_NOT_PASS);
+                    obj.setDetailStatus(CommonVariable.PRIMARY_SCREENING_NOT_PASS);
                 } else if (status == CommonVariable.ResumeVariable.PRELIMINARY_TEST){
-                    resume.setDetailStatus(CommonVariable.PRELIMINARY_TESTING);
+                    obj.setDetailStatus(CommonVariable.PRELIMINARY_TESTING);
                 } else if (status == CommonVariable.ResumeVariable.PRELIMINARY_TEST_PASS){
-                    resume.setDetailStatus(CommonVariable.PRELIMINARY_TEST_PASS);
+                    obj.setDetailStatus(CommonVariable.PRELIMINARY_TEST_PASS);
                 } else if (status == CommonVariable.ResumeVariable.PRELIMINARY_TEST_NOT_PASS){
-                    resume.setDetailStatus(CommonVariable.PRELIMINARY_TEST_NOT_PASS);
+                    obj.setDetailStatus(CommonVariable.PRELIMINARY_TEST_NOT_PASS);
                 } else if (status == CommonVariable.ResumeVariable.SECONDARY_EXAMINATION){
-                    resume.setDetailStatus(CommonVariable.SECONDARY_TESTING);
+                    obj.setDetailStatus(CommonVariable.SECONDARY_TESTING);
                 } else if (status == CommonVariable.ResumeVariable.SECONDARY_TEST_PASS){
-                    resume.setDetailStatus(CommonVariable.SECONDARY_TEST_PASS);
+                    obj.setDetailStatus(CommonVariable.SECONDARY_TEST_PASS);
                 } else if (status == CommonVariable.ResumeVariable.SECONDARY_TEST_NOT_PASS){
-                    resume.setDetailStatus(CommonVariable.SECONDARY_TEST_NOT_PASS);
+                    obj.setDetailStatus(CommonVariable.SECONDARY_TEST_NOT_PASS);
                 }
+            }
+            //设置面试评价
+            if (isPass != null && !isPass){
+                List<Integer> resumeIdList = resumeList.stream().map(Resume::getId).collect(Collectors.toList());
+                resumeProcessMapper.selectEvaluationByIds(resumeIdList, CommonVariable.IS_NOT_PASS, CommonVariable.IS_NOT_DELETE);
             }
         }
         return Result.sucess(resumeList, "查询列表成功！", page.getTotal());

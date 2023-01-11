@@ -25,4 +25,6 @@ public interface ResumeProcessMapper extends BaseMapper<ResumeProcess> {
     ResumeProcess selectByResumeId(Integer resumeId, Integer status, String isDelete);
 
     List<ResumeProcess> selectByResumeIds(List<Integer> resumeIds, String isDelete);
+
+    List<ResumeProcess> selectEvaluationByIds(List<Integer> resumeIds, Integer interviewResult, String isDelete);
 }

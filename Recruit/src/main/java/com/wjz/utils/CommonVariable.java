@@ -2,6 +2,9 @@ package com.wjz.utils;
 
 public interface CommonVariable {
     interface ResumeVariable{
+        //待筛选(待推送)
+        Integer TO_BE_SCREENED = 0;
+
         //初筛中
         Integer PRIMARY_SCREENING = 10;
 
@@ -54,6 +57,9 @@ public interface CommonVariable {
 
     //未通过
     Integer IS_NOT_PASS = 2;
+
+    //待筛选
+    String TO_BE_SCREENED = "待筛选";
 
     //初筛中
     String PRELIMINARY_SCREENING_TO_BE_CONFIRMED = "初筛中";

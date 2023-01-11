@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.wjz.entity.Result;
 import com.wjz.entity.Resume;
-import com.wjz.entity.ResumePageInfo;
 import com.wjz.entity.ResumeProcess;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,7 +30,7 @@ public interface ResumeService extends IService<Resume> {
 
     JSONObject updateResume(Resume resume);
 
-    Result<List<Resume>> pageByPositionName(ResumePageInfo resumePageInfo);
+    Result<List<Resume>> pageByPositionName(Integer pageNum, Integer pageSize, Resume resume, Boolean isPass);
 
     int pushResume(int id, int supId, String resumeUrlName);
 

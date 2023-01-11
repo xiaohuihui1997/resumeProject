@@ -20,4 +20,14 @@
             #{item}
         </foreach>
     </select>
+
+    <select id="selectEvaluationByIds" resultType="com.wjz.entity.ResumeProcess">
+        select id as id,
+               resume_id as resumeId,
+               comprehensive_assessment as comprehensiveAssessment
+        from resume_process where is_delete = #{isDelete} and interview_result = #{interviewResult} and resume_id in
+        <foreach collection="resumeIds" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
 </mapper>
