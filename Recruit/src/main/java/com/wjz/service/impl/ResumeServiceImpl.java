@@ -42,11 +42,6 @@ public class ResumeServiceImpl extends ServiceImpl<ResumeMapper, Resume> impleme
     @Override
     public void enteringResume(Resume resume) {
         resumeMapper.insert(resume);
-//        resumeMapper.insertReturnId(resume);
-//        ResumeProcess resumeProcess = new ResumeProcess();
-//        resumeProcess.setResumeId(resume.getId());
-//        resumeProcess.setStatus(CommonVariable.PRIMARY_SCREENING);
-//        resumeProcessMapper.insert(resumeProcess);
     }
 
     @Override
@@ -162,5 +157,43 @@ public class ResumeServiceImpl extends ServiceImpl<ResumeMapper, Resume> impleme
         resumeProcess.setResumeId(id);
         resumeProcess.setStatus(CommonVariable.ResumeProcessVariable.PRIMARY_SCREENING);
         return resumeProcessMapper.insert(resumeProcess);
+    }
+
+    @Transactional
+    @Override
+    public JSONObject interviewTime(ResumeProcess resumeProcess) {
+        //先查看该简历流程到哪里了
+//        Integer status = resumeMapper.selectStatusById(resumeProcess.getResumeId());
+//        if (status == CommonVariable.ResumeVariable.PRIMARY_SCREENING_PASS){
+//            //如果是初筛通过，则设置初面时间和面试官
+//            Resume resume = new Resume();
+//            resume.setId(resumeProcess.getResumeId());
+//            resume.setStatus(CommonVariable.ResumeVariable.PRELIMINARY_TEST);
+//            resumeMapper.updateById(resume);
+//            resumeProcessMapper.updateById(resumeProcess);
+//        } else if (status == CommonVariable.ResumeVariable.PRELIMINARY_TEST_PASS){
+//            //如果是初试通过，则约复试
+//            //修改简历状态，以及简历流程
+//            Resume resume = new Resume();
+//            resume.setId(resumeProcess.getResumeId());
+//            resume.setStatus(CommonVariable.ResumeVariable.SECONDARY_EXAMINATION);
+//            resumeMapper.updateById(resume);
+//            resumeProcess.setStatus(CommonVariable.ResumeProcessVariable.SECONDARY_EXAMINATION);
+//            resumeProcessMapper.insert(resumeProcess);
+//        } else {
+//            return JsonObjectUtil.returnData(500, "该候选人还不能面试！");
+//        }
+        resumeProcessMapper.updateById(resumeProcess);
+        return JsonObjectUtil.returnData(200, "成功！");
+    }
+
+    @Transactional
+    @Override
+    public JSONObject interviewResult(ResumeProcess resumeProcess) {
+        //更新面试流程
+        resumeProcessMapper.updateById(resumeProcess);
+        //更新简历
+        resumeMapper.updateStatusById(resumeProcess.getResumeId(), resumeProcess.getInterviewResult());
+        return JsonObjectUtil.returnData(200, "成功！");
     }
 }

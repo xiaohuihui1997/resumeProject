@@ -194,9 +194,18 @@ public class ResumeController {
      * @return
      */
     @RequestMapping(value = "/interviewTime", method = RequestMethod.POST)
-    private JSONObject interview(@RequestBody ResumeProcess resumeProcess) {
-        return resumeService.interview(resumeProcess);
+    private JSONObject interviewTime(@RequestBody ResumeProcess resumeProcess) {
+        return resumeService.interviewTime(resumeProcess);
     }
 
+    /**
+     * 用人部门设置面试结论
+     * @param resumeProcess
+     * @return
+     */
+    @RequestMapping(value = "/interviewResult", method = RequestMethod.POST)
+    private JSONObject interviewResult(@RequestBody ResumeProcess resumeProcess) {
+        return resumeService.interviewResult(resumeProcess);
+    }
 }
 

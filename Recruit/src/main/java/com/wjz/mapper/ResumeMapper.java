@@ -1,7 +1,6 @@
 package com.wjz.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.wjz.entity.RecrRecruit;
 import com.wjz.entity.Resume;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -27,6 +26,6 @@ public interface ResumeMapper extends BaseMapper<Resume> {
     void insertReturnId(Resume resume);
 
     Integer selectStatusById(Integer id);
-    int pushResume(int id, int sup_id, @Param("resumeUrlName")String resumeUrlName);
 
+    int updateStatusById(Integer id, Integer interviewResult);
 }

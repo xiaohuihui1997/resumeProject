@@ -28,4 +28,8 @@
     <select id="selectStatusById" resultType="java.lang.Integer">
         select status from resume where id = #{id}
     </select>
+
+    <update id="updateStatusById">
+        update resume set status = status + #{interviewResult} where id = #{id}
+    </update>
 </mapper>

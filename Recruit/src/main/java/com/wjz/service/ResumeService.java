@@ -1,10 +1,11 @@
 package com.wjz.service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.wjz.entity.*;
+import com.wjz.entity.Result;
+import com.wjz.entity.Resume;
+import com.wjz.entity.ResumePageInfo;
+import com.wjz.entity.ResumeProcess;
 
 import java.util.List;
 
@@ -32,6 +33,7 @@ public interface ResumeService extends IService<Resume> {
 
     int pushResume(int id, int sup_id, String resumeUrlName);
 
-    JSONObject interview(ResumeProcess resumeProcess);
+    JSONObject interviewTime(ResumeProcess resumeProcess);
 
+    JSONObject interviewResult(ResumeProcess resumeProcess);
 }
