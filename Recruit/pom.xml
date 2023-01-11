@@ -107,17 +107,18 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!--邮件发送依赖-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-mail</artifactId>
-        </dependency>
-
         <!--spring-boot-starter-test-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <!--    发送邮件    -->
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.4.7</version>
         </dependency>
 
         <!--核心Spring Boot starter ,包括自动配置支持，日志和YAM-->

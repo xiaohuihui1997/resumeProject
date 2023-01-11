@@ -1,117 +1,133 @@
 package com.wjz.utils;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.*;
 import java.io.File;
+import java.util.Date;
+import java.util.List;
+import java.util.Properties;
 
-/**
- * @ClassName EmailUtil
- * @Description 邮件发送工具
- * @Author Sophia
- * @Date 2022/4/6 16:06
- */
-@Component
 public class EmailUtil {
 
-    @Value("${spring.mail.from}") // 从application.yml配置文件中获取
-    private String from; // 发送发邮箱地址
+    //邮件服务器地址(SMTP)
+    public static String myEmailSMTPHost = "smtp.qq.com";
 
-    @Resource
-    private JavaMailSender mailSender;
+//   授权码 wbwjshsvpdekdgjb
 
     /**
-     * 发送纯文本邮件信息(纯文本)
-     *
-     * @param to      接收方
-     * @param subject 邮件主题
-     * @param content 邮件内容（发送内容）
+     * 发送纯文本邮件
+     * @param mailTitle 邮件主题
+     * @param content 邮件内容
+     * @param sendMail 发件人邮箱地址 2875778074@qq.com
+     * @param sendName 发件人姓名 雷超
+     * @param receiveMail 收件人 355736353@qq.com
+     * @param sendMailPassword 发送人邮箱授权码 wbwjshsvpdekdgjb
+     * @throws Exception
      */
-    public void sendMessage(String to, String subject, String content) {
-        // 创建一个邮件对象
-        SimpleMailMessage msg = new SimpleMailMessage();
-        msg.setFrom(from); // 设置发送发
-        // 抄送人
-//         msg.setCc(from);
-        // 密送人
-        // msg.setBcc();
-        msg.setTo(to); // 设置接收方
-        msg.setSubject(subject); // 设置邮件主题
-        msg.setText(content); // 设置邮件内容
-        // 发送邮件
-        mailSender.send(msg);
+    public static void sendEmail(String mailTitle, String content, String sendMail, String sendName,
+                                 String receiveMail, String sendMailPassword) throws Exception{
+        Properties p = new Properties();
+        p.setProperty("mail.transport.protocol", "smtp");
+        p.setProperty("mail.smtp.host", myEmailSMTPHost);
+        p.setProperty("mail.smtp.localhost", "localhost");//不加的话在linux报错：501 syntax:ehlo hostname
+        p.setProperty("mail.smtp.auth", "true");
+
+        Session session = Session.getInstance(p);
+        //设置为debug模式，可以查看详细的发送log
+        session.setDebug(true);
+
+        MimeMessage message = new MimeMessage(session);
+        //发件人
+        message.setFrom(new InternetAddress(sendMail, sendName, "UTF-8"));
+
+        //收件人(可以增加多个收件人、抄送、密送)
+        message.setRecipient(MimeMessage.RecipientType.TO, new InternetAddress(receiveMail, receiveMail,"UTF-8"));
+
+        // 4,抄送人
+        message.addRecipient(MimeMessage.RecipientType.CC, new InternetAddress(sendMail));
+
+        //邮件主题
+        message.setSubject(mailTitle, "UTF-8");
+
+
+        //邮件正文
+        message.setContent(content, "text/html;charset=UTF-8");
+
+        //设置显示的发件时间
+        message.setSentDate(new Date());
+
+        //保存前面的设置
+        message.saveChanges();
+
+        //根据session获取邮件传输对象
+        Transport transport = session.getTransport();
+        //连接邮箱服务器
+        transport.connect(sendMail, sendMailPassword);
+        //发送邮件到所有的收件地址
+        transport.sendMessage(message, message.getAllRecipients());
+        transport.close();
     }
 
-    /**
-     * 发送带附件的邮件信息(多个文件)
-     *
-     * @param to      接收方
-     * @param subject 邮件主题
-     * @param content 邮件内容（发送内容）
-     * @param files 文件数组 // 可发送多个附件
-     */
-    public void sendMessageCarryFiles(String to, String subject, String content, File[] files) {
-        MimeMessage mimeMessage = mailSender.createMimeMessage();
-        try {
-            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage,true);
-            helper.setFrom(from); // 设置发送发
-            helper.setTo(to); // 设置接收方
-//            helper.setCc(); //抄送人
-//            helper.setBcc(); //密送人
-            helper.setSubject(subject); // 设置邮件主题
-            helper.setText(content); // 设置邮件内容
-            if (files != null && files.length > 0) { // 添加附件（多个）
-                for (File file : files) {
-                    helper.addAttachment(file.getName(), file);
-                }
-            }
-        } catch (MessagingException e) {
-            e.printStackTrace();
+    //和上边方法基本相同，只不过可以添加附件发送邮件
+    public static void sendEmailWithFile(String mailTitle, String content, String sendMail, String sendName,
+                                         List<String> receiveMailList, String sendMailPassword) throws Exception{
+        Properties p = new Properties();
+        p.setProperty("mail.transport.protocol", "smtp");
+        p.setProperty("mail.smtp.host", myEmailSMTPHost);
+        //p.setProperty("mail.smtp.localhost", "localhost");//不加的话在linux报错：501 syntax:ehlo hostname
+        p.setProperty("mail.smtp.auth", "true");
+
+        Session session = Session.getInstance(p);
+        //设置为debug模式，可以查看详细的发送log
+        session.setDebug(true);
+
+        MimeMessage message = new MimeMessage(session);
+        //发件人
+        message.setFrom(new InternetAddress(sendMail, sendName, "UTF-8"));
+
+        //收件人
+        for(String receiveAddress : receiveMailList){
+            message.setRecipient(MimeMessage.RecipientType.TO, new InternetAddress(receiveAddress, receiveAddress, "UTF-8"));
         }
-        // 发送邮件
-        mailSender.send(mimeMessage);
-    }
 
-    /**
-     * 发送带附件的邮件信息(单个文件)
-     *
-     * @param to      接收方
-     * @param subject 邮件主题
-     * @param content 邮件内容（发送内容）
-     * @param file 单个文件
-     */
-    public void sendMessageCarryFile(String to, String subject, String content, File file) {
-        MimeMessage mimeMessage = mailSender.createMimeMessage();
-        try {
-            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage,true);
-            helper.setFrom(from); // 设置发送发
-            helper.setTo(to); // 设置接收方
-            // helper.setCc(); //抄送人
-            // helper.setBcc(); //密送人
-            helper.setSubject(subject); // 设置邮件主题
-            helper.setText(content); // 设置邮件内容
-            helper.addAttachment(file.getName(), file); // 单个附件
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
-        // 发送邮件
-        mailSender.send(mimeMessage);
-    }
+        //邮件主题
+        message.setSubject(mailTitle, "UTF-8");
 
-    public String getFrom() {
-        return from;
-    }
+        //向multipart对象中添加邮件的各个部分内容，包括文本内容和附件
+        MimeMultipart multipart = new MimeMultipart();
+        //设置邮件的文本内容
+        MimeBodyPart contentPart = new MimeBodyPart();
+        contentPart.setContent(content, "text/html;charset=UTF-8");
+        multipart.addBodyPart(contentPart);
+        //添加附件
+        MimeBodyPart filePart = new MimeBodyPart();
+        DataSource source = new FileDataSource("C:\\Users\\86191\\Pictures" + File.separator + "附件.xlsx");
+        //添加附件的内容
+        filePart.setDataHandler(new DataHandler(source));
+        //添加附件的标题
+        filePart.setFileName(MimeUtility.encodeText("附件.xlsx"));
+        multipart.addBodyPart(filePart);
+        multipart.setSubType("mixed");
+        //将multipart对象放到message中
+        message.setContent(multipart);
 
-    public void setFrom(String from) {
-        this.from = from;
+        //设置显示的发件时间
+        message.setSentDate(new Date());
+
+        //保存前面的设置
+        message.saveChanges();
+
+        //根据session获取邮件传输对象
+        Transport transport = session.getTransport();
+        //连接邮箱服务器
+        transport.connect(sendMail, sendMailPassword);
+        //发送邮件到所有的收件地址
+        transport.sendMessage(message, message.getAllRecipients());
+        transport.close();
     }
 }
-
