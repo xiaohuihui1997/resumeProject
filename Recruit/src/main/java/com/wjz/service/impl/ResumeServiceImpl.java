@@ -19,6 +19,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.net.URLEncoder;
 import java.util.List;
 
 /**
@@ -151,8 +155,8 @@ public class ResumeServiceImpl extends ServiceImpl<ResumeMapper, Resume> impleme
 
     @Transactional
     @Override
-    public int pushResume(int id, int sup_id, String resumeUrlName) {
-        resumeMapper.pushResume(id,sup_id,resumeUrlName, CommonVariable.IS_PUSH, CommonVariable.ResumeVariable.PRIMARY_SCREENING);
+    public int pushResume(int id, int supId, String resumeUrlName) {
+        resumeMapper.pushResume(id,supId,resumeUrlName, CommonVariable.IS_PUSH, CommonVariable.ResumeVariable.PRIMARY_SCREENING);
         ResumeProcess resumeProcess = new ResumeProcess();
         resumeProcess.setResumeId(id);
         resumeProcess.setStatus(CommonVariable.ResumeProcessVariable.PRIMARY_SCREENING);
@@ -196,4 +200,46 @@ public class ResumeServiceImpl extends ServiceImpl<ResumeMapper, Resume> impleme
         resumeMapper.updateStatusById(resumeProcess.getResumeId(), resumeProcess.getInterviewResult());
         return JsonObjectUtil.returnData(200, "成功！");
     }
+
+    @Override
+    public JSONObject downloadResume(HttpServletRequest request, HttpServletResponse response, String url) {
+        InputStream inStream = null;
+        try {
+            File file=new File(url);
+            inStream = new FileInputStream(file);
+            //octet-stream
+            response.setContentType("application/ms-excel;charset=UTF-8");
+            response.setHeader("Content-Disposition","attachment;filename="+setFileDownloadHeader(request, file.getName()));
+            // 循环取出流中的数据
+            byte[] b = new byte[1024];
+            int len;
+            while ((len = inStream.read(b)) > 0) {
+                response.getOutputStream().write(b, 0, len);
+            }
+            inStream.close();
+            response.getOutputStream().close();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return JsonObjectUtil.returnData(200, "下载成功！");
+    }
+
+
+    public static String setFileDownloadHeader(HttpServletRequest request, String fileName) throws UnsupportedEncodingException {
+        final String agent = request.getHeader("USER-AGENT");
+        String filename = null;
+        if (agent.contains("MSIE")) {
+            // IE浏览器
+            filename = URLEncoder.encode(fileName, "utf-8");
+            filename = filename.replace("+", " ");
+        } else if (agent.contains("Firefox")) {
+            // 火狐浏览器
+            filename = new String(fileName.getBytes(), "ISO8859-1");
+        } else {
+            // 其它浏览器
+            filename = URLEncoder.encode(fileName, "utf-8");
+        }
+        return filename;
+    }
+
 }

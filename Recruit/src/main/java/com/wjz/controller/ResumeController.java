@@ -7,15 +7,14 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.wjz.entity.*;
 import com.wjz.service.ResumeService;
-import com.wjz.utils.CommonVariable;
 import com.wjz.utils.JsonObjectUtil;
 import com.wjz.utils.MFileUtils;
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -54,31 +53,31 @@ public class ResumeController {
 
     /**
      * 推送简历
-     * @param resumeUrl 简历文件
+     * @param file 简历文件
      * @throws IOException
      */
     @RequestMapping(value = "/pushResume",method = RequestMethod.POST)
-    public Result<Resume> pushResume(int id, int sup_id, MultipartFile resumeUrl) throws IOException {
-        if (!resumeUrl.isEmpty()) {
-            if((resumeUrl.getOriginalFilename().endsWith(".rar"))||
-                    (resumeUrl.getOriginalFilename().endsWith(".arj"))||
-                    (resumeUrl.getOriginalFilename().endsWith(".jar"))||
-                    (resumeUrl.getOriginalFilename().endsWith(".zip"))||
-                    (resumeUrl.getOriginalFilename().endsWith(".doc"))||
-                    (resumeUrl.getOriginalFilename().endsWith(".jpg"))||
-                    (resumeUrl.getOriginalFilename().endsWith(".png"))||
-                    (resumeUrl.getOriginalFilename().endsWith(".pdf"))||
-                    (resumeUrl.getOriginalFilename().endsWith(".docx"))){
+    public Result<Resume> pushResume(int id, int supId, MultipartFile file) throws IOException {
+        if (!file.isEmpty()) {
+            if((file.getOriginalFilename().endsWith(".rar"))||
+                    (file.getOriginalFilename().endsWith(".arj"))||
+                    (file.getOriginalFilename().endsWith(".jar"))||
+                    (file.getOriginalFilename().endsWith(".zip"))||
+                    (file.getOriginalFilename().endsWith(".doc"))||
+                    (file.getOriginalFilename().endsWith(".jpg"))||
+                    (file.getOriginalFilename().endsWith(".png"))||
+                    (file.getOriginalFilename().endsWith(".pdf"))||
+                    (file.getOriginalFilename().endsWith(".docx"))){
                 //根据文件创建一个文件名字
-                String s1 = MFileUtils.MakeFileName(resumeUrl.getOriginalFilename());
+                String s1 = MFileUtils.MakeFileName(file.getOriginalFilename());
                 //把这个文件写入到FILE_PATH路径下
-                File file = new File(MFileUtils.FILE_PATH + s1);
-                file.mkdirs();
-                resumeUrl.transferTo(file);
+                File filePath = new File(MFileUtils.FILE_PATH + s1);
+                filePath.mkdirs();
+                file.transferTo(filePath);
                 //记录该路径名称
-                String resumeUrlName = MFileUtils.FILE_PATH9+s1;
+                String resumeUrlName = MFileUtils.FILE_PATH+s1;
                 //推送简历
-                int update = resumeService.pushResume(id,sup_id,resumeUrlName);
+                int update = resumeService.pushResume(id,supId,resumeUrlName);
                 if(update>0){
                     return Result.sucess("上传成功!");
                 }else{
@@ -90,6 +89,17 @@ public class ResumeController {
         }else{
             return Result.error("文件为空!");
         }
+    }
+
+    /**
+     * 未推送的简历
+     * 分页查询
+     * @param url 文件路径
+     * @return
+     */
+    @RequestMapping(value = "/downloadResume",method = RequestMethod.GET)
+    public JSONObject downloadResume(HttpServletRequest request, HttpServletResponse response, @RequestParam("url") String url){
+        return resumeService.downloadResume(request, response, url);
     }
 
     /**

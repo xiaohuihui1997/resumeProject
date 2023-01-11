@@ -13,9 +13,6 @@ import javax.annotation.Resource;
 @RequestMapping("/test")
 public class TestController {
 
-    @Resource
-    private EmailUtil emailUtil;
-
     /**
      * 发送邮件测试
      * @param to      接收方
@@ -25,7 +22,7 @@ public class TestController {
      */
     @RequestMapping(value = "/testEmail",method = RequestMethod.POST)
     public Result<String> testEmail(String to,String subject,String content){
-        emailUtil.sendMessage(to,subject,content);
+        //EmailUtil.sendMessage(to,subject,content);
         return Result.sucess("发送成功！！！");
     }
 

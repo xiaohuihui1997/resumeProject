@@ -7,6 +7,8 @@ import com.wjz.entity.Resume;
 import com.wjz.entity.ResumePageInfo;
 import com.wjz.entity.ResumeProcess;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -31,9 +33,11 @@ public interface ResumeService extends IService<Resume> {
 
     Result<List<Resume>> pageByPositionName(ResumePageInfo resumePageInfo);
 
-    int pushResume(int id, int sup_id, String resumeUrlName);
+    int pushResume(int id, int supId, String resumeUrlName);
 
     JSONObject interviewTime(ResumeProcess resumeProcess);
 
     JSONObject interviewResult(ResumeProcess resumeProcess);
+
+    JSONObject downloadResume(HttpServletRequest request, HttpServletResponse response, String url);
 }
