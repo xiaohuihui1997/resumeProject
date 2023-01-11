@@ -26,7 +26,7 @@ public class EmailUtil {
      * @param sendMail 发件人邮箱地址 2875778074@qq.com
      * @param sendName 发件人姓名 雷超
      * @param receiveMail 收件人 355736353@qq.com
-     * @param sendMailPassword 发送人邮箱授权码 wbwjshsvpdekdgjb
+     * @param sendMailPassword 发送人邮箱授权码
      * @throws Exception
      */
     public static void sendEmail(String mailTitle, String content, String sendMail, String sendName,
