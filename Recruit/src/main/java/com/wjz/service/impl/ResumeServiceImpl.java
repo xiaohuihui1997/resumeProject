@@ -93,6 +93,9 @@ public class ResumeServiceImpl extends ServiceImpl<ResumeMapper, Resume> impleme
             }
         }
         updateById(resume);
+        if (resume.getResumeProcess() != null){
+            resumeProcessMapper.updateById(resume.getResumeProcess());
+        }
         return JsonObjectUtil.returnData(200, "修改成功！");
     }
 
@@ -160,5 +163,4 @@ public class ResumeServiceImpl extends ServiceImpl<ResumeMapper, Resume> impleme
         resumeProcess.setStatus(CommonVariable.ResumeProcessVariable.PRIMARY_SCREENING);
         return resumeProcessMapper.insert(resumeProcess);
     }
-
 }

@@ -32,4 +32,6 @@ public interface ResumeService extends IService<Resume> {
 
     int pushResume(int id, int sup_id, String resumeUrlName);
 
+    JSONObject interview(ResumeProcess resumeProcess);
+
 }

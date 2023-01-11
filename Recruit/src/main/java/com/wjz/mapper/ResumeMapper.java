@@ -25,6 +25,8 @@ public interface ResumeMapper extends BaseMapper<Resume> {
     int pushResume(int id, int sup_id, @Param("resumeUrlName")String resumeUrlName, @Param("isPush") Integer isPush, @Param("status") Integer status);
 
     void insertReturnId(Resume resume);
+
+    Integer selectStatusById(Integer id);
     int pushResume(int id, int sup_id, @Param("resumeUrlName")String resumeUrlName);
 
 }

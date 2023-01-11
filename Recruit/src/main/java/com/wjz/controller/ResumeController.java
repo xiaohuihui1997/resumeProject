@@ -187,5 +187,16 @@ public class ResumeController {
         }
         return resumeService.pageByPositionName(resumePageInfo);
     }
+
+    /**
+     * 用人部门设置面试时间
+     * @param resumeProcess
+     * @return
+     */
+    @RequestMapping(value = "/interviewTime", method = RequestMethod.POST)
+    private JSONObject interview(@RequestBody ResumeProcess resumeProcess) {
+        return resumeService.interview(resumeProcess);
+    }
+
 }
 
