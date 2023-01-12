@@ -171,7 +171,6 @@ public class ResumeController {
 
     /**
      * 修改单个简历
-     *
      * @param resume
      * @return
      */

@@ -17,7 +17,7 @@ public class EmailUtil {
     //邮件服务器地址(SMTP)
     public static String myEmailSMTPHost = "smtp.qq.com";
 
-//   授权码 wbwjshsvpdekdgjb
+   //授权码 wbwjshsvpdekdgjb
 
     /**
      * 发送纯文本邮件
@@ -73,9 +73,11 @@ public class EmailUtil {
         transport.close();
     }
 
+
+    //fileUrl 文件路径
     //和上边方法基本相同，只不过可以添加附件发送邮件
     public static void sendEmailWithFile(String mailTitle, String content, String sendMail, String sendName,
-                                         List<String> receiveMailList, String sendMailPassword) throws Exception{
+                                         List<String> receiveMailList, String sendMailPassword,String fileUrl) throws Exception{
         Properties p = new Properties();
         p.setProperty("mail.transport.protocol", "smtp");
         p.setProperty("mail.smtp.host", myEmailSMTPHost);
@@ -106,7 +108,7 @@ public class EmailUtil {
         multipart.addBodyPart(contentPart);
         //添加附件
         MimeBodyPart filePart = new MimeBodyPart();
-        DataSource source = new FileDataSource("C:\\Users\\86191\\Pictures" + File.separator + "附件.xlsx");
+        DataSource source = new FileDataSource(fileUrl + File.separator + "附件.xlsx");
         //添加附件的内容
         filePart.setDataHandler(new DataHandler(source));
         //添加附件的标题

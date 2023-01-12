@@ -9,8 +9,8 @@ server:
 Spring:
   datasource: #数据库设置
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.2.88:3306/recruit?characterEncoding=UTF-8&useUnicode=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=GMT%2B8
-    password: root123
+    url: jdbc:mysql:///recruit?characterEncoding=UTF-8&useUnicode=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=GMT%2B8
+    password: root
     username: root
     type: com.alibaba.druid.pool.DruidDataSource
     initialSize: 5
